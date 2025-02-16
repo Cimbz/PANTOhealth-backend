@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { SignalsService } from '../signals/signals.service';
 import { CreateXRaySignalInput } from './dto/create-signals.dto';
+import { ApiBody, ApiQuery } from '@nestjs/swagger';
 import { UpdateSignalInput } from './dto/update-signals.dto';
 
 @Controller('signals')
@@ -33,6 +34,18 @@ export class SignalsController {
   }
 
   @Get('search')
+  @ApiQuery({
+    name: 'deviceId',
+    required: false,
+    type: String,
+    description: 'Optional device ID',
+  })
+  @ApiQuery({
+    name: 'dataLength',
+    required: false,
+    type: Number,
+    description: 'Optional data length',
+  })
   async searchSignals(
     @Query('deviceId') deviceId?: string,
     @Query('dataLength') dataLength?: string,
@@ -55,6 +68,10 @@ export class SignalsController {
   }
 
   @Put(':id')
+  @ApiBody({
+    description: 'Update signal payload',
+    type: UpdateSignalInput,
+  })
   async updateSignal(
     @Param('id') id: string,
     @Body() updateData: UpdateSignalInput,
