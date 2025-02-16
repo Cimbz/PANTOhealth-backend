@@ -173,12 +173,15 @@ export class SignalsService {
     }
   }
 
-  async updateSignal(input: UpdateSignalInput): Promise<UpdateSignalOutput> {
+  async updateSignal(
+    id: string,
+    input: UpdateSignalInput,
+  ): Promise<UpdateSignalOutput> {
     const session = await this.connection.startSession();
     session.startTransaction();
     try {
-      await this.getSignalById({ id: input.id });
-      await this.signalRepository.update(input);
+      await this.getSignalById({ id });
+      await this.signalRepository.update(id, input);
 
       await session.commitTransaction();
       session.endSession();
