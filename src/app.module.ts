@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { SignalsModule } from './modules/signals/signals.module';
+import { ProducerModule } from './modules/producer/producer.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { SignalsModule } from './modules/signals/signals.module';
     MongooseModule.forRoot(process.env.MONGO_URI as string),
     RabbitmqModule,
     SignalsModule,
+    ProducerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
