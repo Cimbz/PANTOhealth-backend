@@ -1,4 +1,3 @@
-
 import { Controller, Get, InternalServerErrorException } from '@nestjs/common';
 import { RabbitmqService } from './rabbitmq.service';
 
@@ -8,13 +7,11 @@ export class RabbitmqController {
 
   @Get('test')
   async testSendMessage() {
-    try{
+    try {
       const message = { data: 'Test message' };
-    await this.rabbitmqService.sendMessage(message);
-    return 'Message sent';
-  }
-    catch(error)
-    { 
+      await this.rabbitmqService.sendMessage(message);
+      return 'Message sent';
+    } catch (error) {
       throw new InternalServerErrorException(error);
     }
   }
