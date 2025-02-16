@@ -10,6 +10,7 @@ import {
 import { SignalRepository } from './signals.repository';
 import { InjectConnection } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
+import { SearchSignalsOutput } from './dto/search-signals.dto';
 
 @Injectable()
 export class SignalsService {
@@ -101,6 +102,20 @@ export class SignalsService {
     } catch (error) {
       this.logger.error('Error processing x-ray data:', error);
       throw error;
+    }
+  }
+
+  async getAllSignals():Promise<SearchSignalsOutput>{
+    try{
+      const results = await this.signalRepository.getAllSignals();
+
+      return{
+        success:true,
+        results,
+      }
+    } catch(error){
+      this.logger.error('Failed to get data:', error);
+      throw new InternalServerErrorException(error);
     }
   }
 }

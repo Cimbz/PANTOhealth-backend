@@ -19,4 +19,9 @@ export class SignalRepository {
   async bulkInsert(inputs: CreateXRaySignalInput[]): Promise<void> {
     await this.signalModel.insertMany(inputs);
   }
+
+  async getAllSignals(): Promise<XRaySignalEntity[]> {
+    return this.signalModel.find().exec();
+ }
+ 
 }
