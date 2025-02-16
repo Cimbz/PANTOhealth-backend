@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Logger,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { SignalsService } from '../signals/signals.service';
 import { CreateXRaySignalInput } from './dto/create-signals.dto';
 
@@ -22,30 +32,42 @@ export class SignalsController {
   }
 
   @Get('search')
-  async searchSignals(@Query('deviceId') deviceId?: string, @Query('dataLength') dataLength?: string) {
-    const dataLengthNum = dataLength && !isNaN(Number(dataLength)) ? parseInt(dataLength, 10) : undefined;
-    const signals = await this.signalsService.searchSignals({ deviceId, dataLength: dataLengthNum });
+  async searchSignals(
+    @Query('deviceId') deviceId?: string,
+    @Query('dataLength') dataLength?: string,
+  ) {
+    const dataLengthNum =
+      dataLength && !isNaN(Number(dataLength))
+        ? parseInt(dataLength, 10)
+        : undefined;
+    const signals = await this.signalsService.searchSignals({
+      deviceId,
+      dataLength: dataLengthNum,
+    });
     return { signals };
   }
-   
+
   @Get(':id')
   async getSignalById(@Param('id') id: string) {
-    const signal = await this.signalsService.getSignalById({id});
+    const signal = await this.signalsService.getSignalById({ id });
     return { signal };
   }
 
   @Put(':id')
-  async updateSignal(@Param('id') id: string, @Body() updateData: Record<string, any>) {
-    const updatedSignal = await this.signalsService.updateSignal({id, ...updateData});
+  async updateSignal(
+    @Param('id') id: string,
+    @Body() updateData: Record<string, any>,
+  ) {
+    const updatedSignal = await this.signalsService.updateSignal({
+      id,
+      ...updateData,
+    });
     return { message: 'Signal updated successfully', updatedSignal };
   }
 
   @Delete(':id')
   async deleteSignal(@Param('id') id: string) {
-    await this.signalsService.deleteSignal({id});
+    await this.signalsService.deleteSignal({ id });
     return { message: `Signal with ID ${id} deleted successfully` };
   }
-
-
-
 }

@@ -11,11 +11,20 @@ import {
 import { SignalRepository } from './signals.repository';
 import { InjectConnection } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { SearchSignalsInput, SearchSignalsOutput } from './dto/search-signals.dto';
+import {
+  SearchSignalsInput,
+  SearchSignalsOutput,
+} from './dto/search-signals.dto';
 import { FindSignalByIdInput, FindSignalOutput } from './dto/find-signals.dto';
 import { NOTHING_FOUND } from 'src/common/constants/common_message';
-import { UpdateSignalInput, UpdateSignalOutput } from './dto/update-signals.dto';
-import { DeleteSignalInput, DeleteSignalOutput } from './dto/delete-signals.dto';
+import {
+  UpdateSignalInput,
+  UpdateSignalOutput,
+} from './dto/update-signals.dto';
+import {
+  DeleteSignalInput,
+  DeleteSignalOutput,
+} from './dto/delete-signals.dto';
 
 @Injectable()
 export class SignalsService {
@@ -26,14 +35,12 @@ export class SignalsService {
     private readonly signalRepository: SignalRepository,
   ) {}
 
-
   async createSignal(
     input: CreateXRaySignalInput,
   ): Promise<CreateXRaySignalOutput> {
     const session = await this.connection.startSession();
     session.startTransaction();
     try {
-     
       await this.signalRepository.create(input);
 
       await session.commitTransaction();
@@ -135,43 +142,42 @@ export class SignalsService {
     }
   }
 
-  async getAllSignals():Promise<SearchSignalsOutput>{
-    try{
+  async getAllSignals(): Promise<SearchSignalsOutput> {
+    try {
       const results = await this.signalRepository.getAllSignals();
 
-      return{
-        success:true,
+      return {
+        success: true,
         results,
-      }
-    } catch(error){
+      };
+    } catch (error) {
       this.logger.error('Failed to get data:', error);
       throw new InternalServerErrorException(error);
     }
   }
 
-  async getSignalById(input: FindSignalByIdInput ):Promise<FindSignalOutput> {
-    try{
-        const signal = await this.signalRepository.findById(input.id);
-        if(!signal) {
-          throw new NotFoundException(NOTHING_FOUND)
-        }
+  async getSignalById(input: FindSignalByIdInput): Promise<FindSignalOutput> {
+    try {
+      const signal = await this.signalRepository.findById(input.id);
+      if (!signal) {
+        throw new NotFoundException(NOTHING_FOUND);
+      }
 
-        return{
-          success: true,
-          results: signal,
-        }
-
-    } catch(error){
+      return {
+        success: true,
+        results: signal,
+      };
+    } catch (error) {
       this.logger.error('Failed to get data by id:', error);
       throw new InternalServerErrorException(error);
     }
   }
 
-  async updateSignal(input: UpdateSignalInput): Promise<UpdateSignalOutput>{
+  async updateSignal(input: UpdateSignalInput): Promise<UpdateSignalOutput> {
     const session = await this.connection.startSession();
     session.startTransaction();
     try {
-      await this.getSignalById({id:input.id});
+      await this.getSignalById({ id: input.id });
       await this.signalRepository.update(input);
 
       await session.commitTransaction();
@@ -189,11 +195,11 @@ export class SignalsService {
     }
   }
 
-  async deleteSignal(input: DeleteSignalInput): Promise<DeleteSignalOutput>{
+  async deleteSignal(input: DeleteSignalInput): Promise<DeleteSignalOutput> {
     const session = await this.connection.startSession();
     session.startTransaction();
     try {
-      await this.getSignalById({id:input.id});
+      await this.getSignalById({ id: input.id });
       await this.signalRepository.delete(input.id);
 
       await session.commitTransaction();
@@ -211,16 +217,15 @@ export class SignalsService {
     }
   }
 
-  async searchSignals(input: SearchSignalsInput): Promise<SearchSignalsOutput>{
-    try{
+  async searchSignals(input: SearchSignalsInput): Promise<SearchSignalsOutput> {
+    try {
       const results = await this.signalRepository.search(input);
 
-      return{
+      return {
         success: true,
         results,
-      }
-
-    } catch(error){
+      };
+    } catch (error) {
       this.logger.error('Failed to get signals with provided filters:', error);
       throw new InternalServerErrorException(error);
     }
