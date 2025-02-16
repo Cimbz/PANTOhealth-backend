@@ -21,6 +21,31 @@ export class SignalsService {
     private readonly signalRepository: SignalRepository,
   ) {}
 
+
+  async createSignal(
+    input: CreateXRaySignalInput,
+  ): Promise<CreateXRaySignalOutput> {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+    try {
+     
+      await this.signalRepository.create(input);
+
+      await session.commitTransaction();
+      session.endSession();
+
+      return {
+        success: true,
+      };
+    } catch (error) {
+      await session.abortTransaction();
+      this.logger.error('Failed to save signal:', error);
+      throw new InternalServerErrorException(error);
+    } finally {
+      session.endSession();
+    }
+  }
+
   async insertXRaySignals(
     input: CreateXRaySignalInput[],
   ): Promise<CreateXRaySignalOutput> {
