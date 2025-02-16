@@ -2,6 +2,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import {
   CreateXRaySignalInput,
@@ -11,6 +12,8 @@ import { SignalRepository } from './signals.repository';
 import { InjectConnection } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { SearchSignalsOutput } from './dto/search-signals.dto';
+import { FindSignalByIdInput, FindSignalOutput } from './dto/find-signals.dto';
+import { NOTHING_FOUND } from 'src/common/constants/common_message';
 
 @Injectable()
 export class SignalsService {
@@ -140,6 +143,24 @@ export class SignalsService {
       }
     } catch(error){
       this.logger.error('Failed to get data:', error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  async getSignalById(input: FindSignalByIdInput ):Promise<FindSignalOutput> {
+    try{
+        const signal = await this.signalRepository.findById(input.id);
+        if(!signal) {
+          throw new NotFoundException(NOTHING_FOUND)
+        }
+
+        return{
+          success: true,
+          results: signal,
+        }
+        
+    } catch(error){
+      this.logger.error('Failed to get data by id:', error);
       throw new InternalServerErrorException(error);
     }
   }

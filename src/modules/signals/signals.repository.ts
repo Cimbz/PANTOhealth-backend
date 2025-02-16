@@ -21,7 +21,11 @@ export class SignalRepository {
   }
 
   async getAllSignals(): Promise<XRaySignalEntity[]> {
-    return this.signalModel.find().exec();
+    return await this.signalModel.find().exec();
+ }
+
+ async findById(id: string): Promise< XRaySignalEntity | null>{
+    return await this.signalModel.findById(id).exec();
  }
  
 }

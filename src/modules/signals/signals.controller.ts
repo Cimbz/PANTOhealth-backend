@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Param, Post } from '@nestjs/common';
 import { SignalsService } from '../signals/signals.service';
 import { CreateXRaySignalInput } from './dto/create-signals.dto';
 
@@ -20,7 +20,11 @@ export class SignalsController {
     const signals = await this.signalsService.getAllSignals();
     return { signals };
   }
-
- 
+   
+  @Get(':id')
+  async getSignalById(@Param('id') id: string) {
+    const signal = await this.signalsService.getSignalById({id});
+    return { signal };
+  }
 
 }
