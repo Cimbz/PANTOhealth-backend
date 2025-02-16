@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, PipelineStage } from 'mongoose';
 import { XRaySignalEntity } from './entities/signals.entity';
 import { CreateXRaySignalInput } from './dto/create-signals.dto';
 import { UpdateSignalInput } from './dto/update-signals.dto';
+import { SearchSignalsInput } from './dto/search-signals.dto';
 
 @Injectable()
 export class SignalRepository {
@@ -37,5 +38,22 @@ export class SignalRepository {
     await this.signalModel.findByIdAndDelete(id).exec();
   }
 
+  async search({deviceId, dataLength}: SearchSignalsInput): Promise<XRaySignalEntity[]>{
+    const pipeline: PipelineStage[] = [
+      {
+        $match: {
+          ...(deviceId && { deviceId }),
+          ...(dataLength && { dataLength }),
+        },
+      },
+      {
+        $sort: {
+          _id: 1,
+        },
+      },      
+    ];
+    
+    return await this.signalModel.aggregate(pipeline);
+  }
  
 }

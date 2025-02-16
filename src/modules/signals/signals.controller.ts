@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Query } from '@nestjs/common';
 import { SignalsService } from '../signals/signals.service';
 import { CreateXRaySignalInput } from './dto/create-signals.dto';
 
@@ -20,6 +20,13 @@ export class SignalsController {
     const signals = await this.signalsService.getAllSignals();
     return { signals };
   }
+
+  @Get('search')
+  async searchSignals(@Query('deviceId') deviceId?: string, @Query('dataLength') dataLength?: string) {
+    const dataLengthNum = dataLength && !isNaN(Number(dataLength)) ? parseInt(dataLength, 10) : undefined;
+    const signals = await this.signalsService.searchSignals({ deviceId, dataLength: dataLengthNum });
+    return { signals };
+  }
    
   @Get(':id')
   async getSignalById(@Param('id') id: string) {
@@ -38,5 +45,7 @@ export class SignalsController {
     await this.signalsService.deleteSignal({id});
     return { message: `Signal with ID ${id} deleted successfully` };
   }
+
+
 
 }

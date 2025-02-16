@@ -11,7 +11,7 @@ import {
 import { SignalRepository } from './signals.repository';
 import { InjectConnection } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { SearchSignalsOutput } from './dto/search-signals.dto';
+import { SearchSignalsInput, SearchSignalsOutput } from './dto/search-signals.dto';
 import { FindSignalByIdInput, FindSignalOutput } from './dto/find-signals.dto';
 import { NOTHING_FOUND } from 'src/common/constants/common_message';
 import { UpdateSignalInput, UpdateSignalOutput } from './dto/update-signals.dto';
@@ -208,6 +208,21 @@ export class SignalsService {
       throw new InternalServerErrorException(error);
     } finally {
       session.endSession();
+    }
+  }
+
+  async searchSignals(input: SearchSignalsInput): Promise<SearchSignalsOutput>{
+    try{
+      const results = await this.signalRepository.search(input);
+
+      return{
+        success: true,
+        results,
+      }
+
+    } catch(error){
+      this.logger.error('Failed to get signals with provided filters:', error);
+      throw new InternalServerErrorException(error);
     }
   }
 }
