@@ -1,4 +1,10 @@
-import { Body, Controller, Get, InternalServerErrorException, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  InternalServerErrorException,
+  Post,
+} from '@nestjs/common';
 import { RabbitmqService } from './rabbitmq.service';
 
 @Controller('rabbitmq')

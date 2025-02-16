@@ -12,7 +12,7 @@ import { SignalsController } from './signals.controller';
     ]),
   ],
   providers: [SignalsService, SignalRepository],
-  controllers:[SignalsController],
+  controllers: [SignalsController],
   exports: [SignalsService],
 })
 export class SignalsModule {}

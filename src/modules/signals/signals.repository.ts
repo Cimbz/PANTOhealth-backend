@@ -26,19 +26,24 @@ export class SignalRepository {
     return await this.signalModel.find().exec();
   }
 
-  async findById(id: string): Promise< XRaySignalEntity | null>{
+  async findById(id: string): Promise<XRaySignalEntity | null> {
     return await this.signalModel.findById(id).exec();
   }
 
-  async update({id, ...restOfArgs}: UpdateSignalInput): Promise<void> {
-    await this.signalModel.findByIdAndUpdate(id, restOfArgs, { new: true }).exec();
+  async update({ id, ...restOfArgs }: UpdateSignalInput): Promise<void> {
+    await this.signalModel
+      .findByIdAndUpdate(id, restOfArgs, { new: true })
+      .exec();
   }
 
-  async delete(id: string): Promise<void>{
+  async delete(id: string): Promise<void> {
     await this.signalModel.findByIdAndDelete(id).exec();
   }
 
-  async search({deviceId, dataLength}: SearchSignalsInput): Promise<XRaySignalEntity[]>{
+  async search({
+    deviceId,
+    dataLength,
+  }: SearchSignalsInput): Promise<XRaySignalEntity[]> {
     const pipeline: PipelineStage[] = [
       {
         $match: {
@@ -50,10 +55,9 @@ export class SignalRepository {
         $sort: {
           _id: 1,
         },
-      },      
+      },
     ];
-    
+
     return await this.signalModel.aggregate(pipeline);
   }
- 
 }
