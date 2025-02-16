@@ -8,7 +8,6 @@ export class SearchSignalsInput {
 
   @IsOptional()
   dataLength?: number;
-
 }
 
 export class SearchSignalsOutput extends CoreOutput {

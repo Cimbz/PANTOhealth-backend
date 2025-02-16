@@ -4,8 +4,8 @@ import { IsString } from 'class-validator';
 import { ID_MUST_BE_STRING } from 'src/common/constants/common_message';
 
 export class FindSignalByIdInput {
-    @IsString({message: ID_MUST_BE_STRING})
-    id: string;
+  @IsString({ message: ID_MUST_BE_STRING })
+  id: string;
 }
 
 export class FindSignalOutput extends CoreOutput {
