@@ -33,5 +33,9 @@ export class SignalRepository {
     await this.signalModel.findByIdAndUpdate(id, restOfArgs, { new: true }).exec();
   }
 
+  async delete(id: string): Promise<void>{
+    await this.signalModel.findByIdAndDelete(id).exec();
+  }
+
  
 }

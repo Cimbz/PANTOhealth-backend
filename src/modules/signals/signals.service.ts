@@ -15,6 +15,7 @@ import { SearchSignalsOutput } from './dto/search-signals.dto';
 import { FindSignalByIdInput, FindSignalOutput } from './dto/find-signals.dto';
 import { NOTHING_FOUND } from 'src/common/constants/common_message';
 import { UpdateSignalInput, UpdateSignalOutput } from './dto/update-signals.dto';
+import { DeleteSignalInput, DeleteSignalOutput } from './dto/delete-signals.dto';
 
 @Injectable()
 export class SignalsService {
@@ -182,6 +183,28 @@ export class SignalsService {
     } catch (error) {
       await session.abortTransaction();
       this.logger.error('Failed to update signal:', error);
+      throw new InternalServerErrorException(error);
+    } finally {
+      session.endSession();
+    }
+  }
+
+  async deleteSignal(input: DeleteSignalInput): Promise<DeleteSignalOutput>{
+    const session = await this.connection.startSession();
+    session.startTransaction();
+    try {
+      await this.getSignalById({id:input.id});
+      await this.signalRepository.delete(input.id);
+
+      await session.commitTransaction();
+      session.endSession();
+
+      return {
+        success: true,
+      };
+    } catch (error) {
+      await session.abortTransaction();
+      this.logger.error('Failed to delete signal:', error);
       throw new InternalServerErrorException(error);
     } finally {
       session.endSession();

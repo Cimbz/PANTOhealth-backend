@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Logger, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put } from '@nestjs/common';
 import { SignalsService } from '../signals/signals.service';
 import { CreateXRaySignalInput } from './dto/create-signals.dto';
 
@@ -31,6 +31,12 @@ export class SignalsController {
   async updateSignal(@Param('id') id: string, @Body() updateData: Record<string, any>) {
     const updatedSignal = await this.signalsService.updateSignal({id, ...updateData});
     return { message: 'Signal updated successfully', updatedSignal };
+  }
+
+  @Delete(':id')
+  async deleteSignal(@Param('id') id: string) {
+    await this.signalsService.deleteSignal({id});
+    return { message: `Signal with ID ${id} deleted successfully` };
   }
 
 }
