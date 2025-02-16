@@ -30,10 +30,8 @@ export class SignalRepository {
     return await this.signalModel.findById(id).exec();
   }
 
-  async update({ id, ...restOfArgs }: UpdateSignalInput): Promise<void> {
-    await this.signalModel
-      .findByIdAndUpdate(id, restOfArgs, { new: true })
-      .exec();
+  async update(id: string, input: UpdateSignalInput): Promise<void> {
+    await this.signalModel.findByIdAndUpdate(id, input, { new: true }).exec();
   }
 
   async delete(id: string): Promise<void> {

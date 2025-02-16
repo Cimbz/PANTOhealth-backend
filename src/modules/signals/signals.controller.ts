@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { SignalsService } from '../signals/signals.service';
 import { CreateXRaySignalInput } from './dto/create-signals.dto';
+import { UpdateSignalInput } from './dto/update-signals.dto';
 
 @Controller('signals')
 export class SignalsController {
@@ -56,12 +57,12 @@ export class SignalsController {
   @Put(':id')
   async updateSignal(
     @Param('id') id: string,
-    @Body() updateData: Record<string, any>,
+    @Body() updateData: UpdateSignalInput,
   ) {
-    const updatedSignal = await this.signalsService.updateSignal({
+    const updatedSignal = await this.signalsService.updateSignal(
       id,
-      ...updateData,
-    });
+      updateData,
+    );
     return { message: 'Signal updated successfully', updatedSignal };
   }
 
