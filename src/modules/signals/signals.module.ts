@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { XRaySignalEntity, XRaySignalSchema } from './entities/signals.entity';
 import { SignalsService } from './signals.service';
 import { SignalRepository } from './signals.repository';
+import { SignalsController } from './signals.controller';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { SignalRepository } from './signals.repository';
     ]),
   ],
   providers: [SignalsService, SignalRepository],
+  controllers:[SignalsController],
   exports: [SignalsService],
 })
 export class SignalsModule {}
