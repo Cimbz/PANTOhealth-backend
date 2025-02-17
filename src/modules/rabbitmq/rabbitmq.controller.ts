@@ -11,17 +11,6 @@ import { RabbitmqService } from './rabbitmq.service';
 export class RabbitmqController {
   constructor(private readonly rabbitmqService: RabbitmqService) {}
 
-  @Get('test')
-  async testSendMessage() {
-    try {
-      const message = { data: 'Test message' };
-      await this.rabbitmqService.sendMessage(message);
-      return 'Message sent';
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
-  }
-
   @Post()
   async receiveXRayData(@Body() xrayData: Record<string, any>) {
     await this.rabbitmqService.sendMessage(xrayData);
