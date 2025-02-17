@@ -1,5 +1,6 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import * as amqp from 'amqplib';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class ProducerService implements OnModuleInit {
@@ -57,7 +58,7 @@ export class ProducerService implements OnModuleInit {
   }
 
   private generateXRayData(): Record<string, any> {
-    const deviceId = `device-${Math.floor(Math.random() * 100)}`;
+    const deviceId = new ObjectId().toString();
     const time = Date.now();
     const data = Array.from({ length: 5 }, (_, i) => [
       i * 1000,
